@@ -1,0 +1,11 @@
+{
+  "name": "vercel-proxy-app",
+  "version": "1.0.0",
+  "description": "A Vercel Edge proxy app for httpbin.org",
+  "dependencies": {
+    "@vercel/edge": "^0.3.4"
+  },
+  "devDependencies": {
+    "vercel": "^32.5.0"
+  }
+}
