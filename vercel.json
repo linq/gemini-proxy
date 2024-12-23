@@ -4,6 +4,10 @@
     {
       "src": "/v1/chat/completions",
       "dest": "/api/proxy.js"
+    },
+    {
+      "src": "/grok/(.*)",
+      "dest": "https://api.x.ai/$1"
     }
   ]
 }
