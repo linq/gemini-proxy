@@ -130,6 +130,21 @@ export default async function handler(req, res) {
 
         const data = line.slice(6);
         if (data === '[DONE]') {
+          // First send a completion message with finish_reason: "stop"
+          const finalChunk = {
+            id: 'chatcmpl-' + Date.now(),
+            object: 'chat.completion.chunk',
+            created: Date.now()/1000,
+            model: model,
+            choices: [{
+              index: 0,
+              delta: {},
+              finish_reason: "stop"
+            }]
+          };
+          res.write(`data: ${JSON.stringify(finalChunk)}\n\n`);
+          
+          // Then send the [DONE] message
           res.write('data: [DONE]\n\n');
           return;
         }
