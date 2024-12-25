@@ -100,6 +100,19 @@ export default async function handler(req, res) {
             if (buffer) {
               processLine(buffer);
             }
+            // 在结束前发送完成信号
+            const finalChunk = {
+              id: 'chatcmpl-' + Date.now(),
+              object: 'chat.completion.chunk',
+              created: Date.now()/1000,
+              model: model,
+              choices: [{
+                index: 0,
+                delta: {},
+                finish_reason: "stop"
+              }]
+            };
+            res.write(`data: ${JSON.stringify(finalChunk)}\n\n`);
             res.write('data: [DONE]\n\n');
             break;
           }
@@ -129,26 +142,6 @@ export default async function handler(req, res) {
         if (!line.trim() || !line.startsWith('data: ')) return;
 
         const data = line.slice(6);
-        if (data === '[DONE]') {
-          // First send a completion message with finish_reason: "stop"
-          const finalChunk = {
-            id: 'chatcmpl-' + Date.now(),
-            object: 'chat.completion.chunk',
-            created: Date.now()/1000,
-            model: model,
-            choices: [{
-              index: 0,
-              delta: {},
-              finish_reason: "stop"
-            }]
-          };
-          res.write(`data: ${JSON.stringify(finalChunk)}\n\n`);
-          
-          // Then send the [DONE] message
-          res.write('data: [DONE]\n\n');
-          return;
-        }
-
         try {
           // 添加调试日志
           if (DEBUG) {
@@ -176,7 +169,7 @@ export default async function handler(req, res) {
             res.write(`data: ${JSON.stringify(openAIChunk)}\n\n`);
           }
         } catch (e) {
-          // 错误日志始终保留，但增加更多细节
+          // 错误日志部分保持不变
           console.error('Parse error:', e.message);
           if (DEBUG) {
             console.error('Parse error for line:', line);
