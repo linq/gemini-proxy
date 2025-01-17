@@ -6,8 +6,12 @@
       "dest": "/api/proxy.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/gm/(.*)",
       "dest": "https://generativelanguage.googleapis.com/$1"
+    },
+    {
+      "src": "/ghm/(.*)",
+      "dest": "https://models.inference.ai.azure.com/$1"
     }
   ]
 }
