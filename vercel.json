@@ -6,8 +6,8 @@
       "dest": "/api/proxy.js"
     },
     {
-      "src": "/grok/(.*)",
-      "dest": "https://api.x.ai/$1"
+      "src": "/(.*)",
+      "dest": "https://generativelanguage.googleapis.com/$1"
     }
   ]
 }
